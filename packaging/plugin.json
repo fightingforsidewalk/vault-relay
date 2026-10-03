@@ -1,0 +1,9 @@
+{
+  "name": "vault-relay",
+  "version": "1.2.4",
+  "license": "MIT",
+  "description": "Plain-file mail for AI chats that share a folder, with rules that stop them chatting. Carries the relay tool and installs it into the relay folder when needed.",
+  "author": {
+    "name": "Fighting For Sidewalk"
+  }
+}

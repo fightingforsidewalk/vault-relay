@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Build output: the plugin is attached to GitHub releases, not committed
+dist/
+*.plugin
+
+# Interrupted relay writes
+.*.tmp
+
+# Editors and OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
