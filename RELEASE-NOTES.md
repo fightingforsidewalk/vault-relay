@@ -1,5 +1,64 @@
 # Release notes
 
+## vault-relay 1.3
+
+*Released 2026-10-06 · relay protocol v2.2 · Python 3.9+ · standard library only · MIT License*
+
+Plain-file mail for AI chats that share a folder, with rules that stop them chatting. You decide when anyone checks it.
+
+vault-relay 1.3 opens the relay to AI agents beyond Claude. Any agent that can work on files in the relay folder and run `python3` can now take part, with its own instructions file, and a Claude chat can send work to it with one phrase.
+
+### Highlights
+
+- **Works with other AIs.** A new `AGENTS.md` gives any agent (Codex, Gemini CLI, Copilot or Cursor in agent mode, and others like them) the same routine Claude follows: its sender code and relay folder, "relay for you", "relay this to", "who's in the relay" and "relay help", with every edit going through `relay.py`. Many agents read `AGENTS.md` on their own.
+- **Send with one phrase.** "Relay this to <code>" (or "relay this for <code>") turns what you just asked for into one message to that sender, with what done looks like and everything needed to finish. The recipient can be another Claude chat or another agent.
+- **Easier help.** "Relay help" now answers with a short bulleted list, each phrase in bold with what it does.
+
+### Commands you can say
+
+| Say | Or type | What happens |
+|---|---|---|
+| relay for you | `/vault-relay` | The chat reads what's waiting for it, acts on each message, closes each one with a receipt, and reports in one line. |
+| relay this to <code> | `/vault-relay to <code>` | Sends what you just asked for to that sender as one message. **New in 1.3.** |
+| who's in the relay | `/vault-relay who` | Lists the owner, the senders and what's waiting. Changes nothing. |
+| relay help | `/vault-relay help` | Lists these phrases and what they do. |
+| set up the relay | `/vault-relay setup` | Walks you through setting up a new relay folder. |
+
+Other agents learn the same phrases from `AGENTS.md`.
+
+### Safety
+
+The tool's behaviour is unchanged from 1.2, and so are its six promises: it never overwrites a name or a file the caller doesn't own; it deletes nothing except what the owner prunes past the hold; consuming moves exactly one file; every write goes through a temporary file and a rename; malformed files stop the run; and protocol version mismatches are flagged. The same 91 tests and the mutation check run against 1.3.
+
+A message to another AI is read by that provider's model, so the rule against putting secrets, credentials or personal data in a message matters even more once the relay crosses providers. `AGENTS.md` says so to every agent that reads it.
+
+### Upgrading from 1.2
+
+1. Install the 1.3 plugin. In a folder whose owner is a Claude chat on another machine, the owner's next "relay for you" installs `relay.py` 1.3 into the relay folder and says so.
+2. To add a non-Claude agent: put its code in the relay folder's README sender list, copy `AGENTS.md` into the folder the agent works in, and fill in its Relay line.
+
+Message files, receipts, the README format and the folder layout are unchanged.
+
+### Known limitations
+
+- Only agents that can work on files in the relay folder on your machine can take part. A chat that lives only in a browser tab can't.
+- The routine in `AGENTS.md` has been run end to end as written, in both directions, but not yet by a non-Claude agent. Reports of what worked are welcome as issues.
+- A sender code is taken on trust, not proved, and the relay is built for one chat at a time. Both as in 1.2.
+
+### Getting it
+
+- **As a plugin, for Claude:** install `vault-relay.plugin` from this release.
+- **For other agents:** download `relay.py` and `AGENTS.md` from this release, put `relay.py` in your relay folder, and `AGENTS.md` where the agent works.
+- **Build it yourself:** `python3 packaging/build.py` packs the plugin from this repository.
+
+See the README's "Works with other AIs" section for setup.
+
+### License
+
+vault-relay is released under the MIT License. See `LICENSE`. Developed through Fighting For Sidewalk.
+
+---
+
 ## vault-relay 1.2
 
 *Released 2026-10-03 · relay protocol v2.2 · Python 3.9+ · standard library only · MIT License*

@@ -41,7 +41,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-TOOL_VERSION = "1.2"
+TOOL_VERSION = "1.3"
 PROTOCOL_VERSION = "2.2"
 HOLD_DAYS = 14
 TZ = "America/New_York"

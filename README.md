@@ -18,7 +18,7 @@ Left alone, chats will happily trade updates forever. So the rules start with ge
 
 **Any AI tool that can read files and run a command.** The rules are plain text and the tool is one Python file, so any chat or agent that can run `python3` in the folder can take part, and so can a person at a terminal. Different tools can share one relay, each with its own sender code.
 
-**Claude gets the ready-made routine.** The `vault-relay` skill, shipped as a Claude plugin, teaches a Claude chat the whole routine and carries the tool with it. For another tool (Codex, Gemini CLI, Copilot or Cursor agents, for example), put the rules from this README and the commands below into that tool's own instructions; `SKILL.md` is a readable template for that. It was built and is used day to day with Claude. Other tools should work the same way, but haven't been tested yet.
+**Claude gets the ready-made routine.** The `vault-relay` skill, shipped as a Claude plugin, teaches a Claude chat the whole routine and carries the tool with it. Other agents get the same routine from `AGENTS.md`; see [Works with other AIs](#works-with-other-ais).
 
 ## Getting to done
 
@@ -34,11 +34,31 @@ Left alone, chats will happily trade updates forever. So the rules start with ge
 | Say | Or type | What happens |
 |---|---|---|
 | relay for you | /vault-relay | The chat reads what's waiting for it, acts on each message, closes each one with a receipt, and reports in one line. If it owns the folder, it also clears out old consumed messages. |
+| relay this to <code> (or relay this for <code>) | /vault-relay to <code> | Sends what you just asked for to that sender as one message that says what done looks like. The recipient can be another Claude chat or another AI agent working in the same folder. |
 | who's in the relay | /vault-relay who | Lists the folder's owner, who may send, and what's waiting between whom. Changes nothing. |
 | relay help | /vault-relay help | Lists these phrases and what they do. |
 | set up the relay | /vault-relay setup | Asks you which folder, which chat owns it and which other chats join, sets the folder up, then gives you a ready-to-paste block for each chat and a short checklist. |
 
-The phrases work because the chat recognises them and loads the skill. Typing the slash form calls the skill directly, which is the surer route; both do the same thing. These are the Claude skill's phrases; for another AI tool, you can teach it the same phrases in its own instructions.
+The phrases work because the chat recognises them and loads the skill. Typing the slash form calls the skill directly, which is the surer route; both do the same thing. These are the Claude skill's phrases. `AGENTS.md` teaches other AI agents the same ones.
+
+## Works with other AIs
+
+The relay doesn't care which AI is on the other end. Any agent that can read and write files in the relay folder and run `python3` there can take part: Codex, Gemini CLI, Copilot or Cursor in agent mode, and others like them. A Claude chat and another agent can hand work back and forth through the same folder, each with its own sender code.
+
+To add one:
+
+1. Put its sender code in the relay folder's README sender list, for example `- codex = Codex CLI`.
+2. Make sure `relay.py` sits in the relay folder. A Claude chat that owns the folder installs it there for you; otherwise copy it in from the release.
+3. Copy `AGENTS.md` into the folder the agent works in, or add it to the agent's own instructions. Fill in its one line: `Relay: sender code <code>; RELAY folder <path>.` Many agents read `AGENTS.md` on their own; for the rest, tell the agent to read it.
+4. Say "relay for you" to it, as you would to a Claude chat. "Relay this to <code>", "who's in the relay" and "relay help" work the same way.
+
+An agent that reads the skill format can load `SKILL.md` directly instead.
+
+**The limit.** The agent has to be able to work on files in that folder on your machine. A chat that only lives in a browser tab, with no access to your files, can't take part.
+
+**What's been tested.** The tool is the same one Claude uses, with the same tests behind it. The routine in `AGENTS.md` has been run end to end as written: a message from a Claude sender to a second sender, consumed with a receipt, and a reply back the other way, also consumed. It hasn't yet been run by a non-Claude agent. If you try it with one, an issue saying what worked is very welcome.
+
+**Mind what you send.** A message to another AI is read by that provider's model. The rule against putting secrets, credentials or personal data in a message matters even more when the relay crosses providers.
 
 ## Setting it up
 
