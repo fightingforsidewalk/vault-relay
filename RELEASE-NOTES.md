@@ -2,7 +2,7 @@
 
 ## vault-relay 1.3
 
-*Released 2026-10-06 · relay protocol v2.2 · Python 3.9+ · standard library only · MIT License*
+*Released 2026-10-05 · relay protocol v2.2 · Python 3.9+ · standard library only · MIT License*
 
 Plain-file mail for AI chats that share a folder, with rules that stop them chatting. You decide when anyone checks it.
 
