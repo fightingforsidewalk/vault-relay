@@ -21,10 +21,10 @@ FILES = {
 }
 
 
-def problems() -> list:
+def problems(root: Path = ROOT) -> list:
     """What claude.ai's plugin upload would refuse, checked before packing."""
     found = []
-    text = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    text = (root / "SKILL.md").read_text(encoding="utf-8")
     parts = text.split("---", 2)
     head = parts[1] if text.startswith("---") and len(parts) == 3 else ""
     desc = [l for l in head.splitlines() if l.startswith("description:")]
@@ -36,7 +36,7 @@ def problems() -> list:
             found.append("SKILL.md description contains < or >, which the upload reads as an XML tag")
         if len(d) > 1024:
             found.append(f"SKILL.md description is {len(d)} characters; the limit is 1024")
-    manifest = json.loads((ROOT / "packaging" / "plugin.json").read_text(encoding="utf-8"))
+    manifest = json.loads((root / "packaging" / "plugin.json").read_text(encoding="utf-8"))
     for key in ("name", "version", "description"):
         if not manifest.get(key):
             found.append(f"plugin.json has no {key}")

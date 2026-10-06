@@ -1,11 +1,11 @@
-"""Switch each of relay.py's guards off in turn and confirm its tests fail.
+"""Switch each of relay.py's guards and build.py's upload checks off in turn and confirm its tests fail.
 
     python3 -B tests/guard_mutations.py
 
 A guard test that still passes with its guard removed proves nothing, so this
-copies relay.py to a temporary folder, breaks one guard in the copy, and runs
-that guard's test class against the broken copy. Every line should read
-'caught'. relay.py itself is never changed.
+copies relay.py (or packaging/build.py) to a temporary folder, breaks one guard
+in the copy, and runs that guard's test class against the broken copy. Every
+line should read 'caught'. Neither file is ever changed.
 """
 import os
 import subprocess
@@ -15,6 +15,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 SOURCE = (HERE.parent / "relay.py").read_text(encoding="utf-8")
+BUILD_SOURCE = (HERE.parent / "packaging" / "build.py").read_text(encoding="utf-8")
 
 MUTATIONS = {
     "Guard1NeverOverwrites": [
@@ -67,20 +68,33 @@ MUTATIONS = {
     ],
 }
 
+# build.py refuses to pack what claude.ai's plugin upload would reject.
+BUILD_MUTATIONS = {
+    "PluginPackaging": [
+        ('        if "<" in d or ">" in d:', "        if False:"),
+        ("        if len(d) > 1024:", "        if False:"),
+        ("        if not manifest.get(key):", "        if False:"),
+    ],
+}
+
 # Guard 1 has several independent checks; each is broken on its own so every one is seen to matter.
-SPLIT = {"Guard1NeverOverwrites": True, "Guard2PruneIsTheOnlyDelete": True, "TestInstallPlan": True, "TestInit": True}
+SPLIT = {"Guard1NeverOverwrites": True, "Guard2PruneIsTheOnlyDelete": True, "TestInstallPlan": True, "TestInit": True,
+         "PluginPackaging": True}
+
+# Which file a set of mutations breaks, and the variable the tests read to load the broken copy.
+TARGETS = {"relay.py": (SOURCE, "RELAY_TOOL_DIR"), "build.py": (BUILD_SOURCE, "BUILD_TOOL_DIR")}
 
 
-def run(guard: str, edits) -> int:
-    src = SOURCE
+def run(guard: str, edits, target: str = "relay.py") -> int:
+    src, variable = TARGETS[target]
     for old, new in edits:
         if src.count(old) != 1:
             print(f"  cannot apply mutation for {guard}: {old.strip()[:50]!r} found {src.count(old)} times")
             return 2
         src = src.replace(old, new)
     with tempfile.TemporaryDirectory() as d:
-        (Path(d) / "relay.py").write_text(src, encoding="utf-8")
-        env = dict(os.environ, RELAY_TOOL_DIR=d, PYTHONDONTWRITEBYTECODE="1")
+        (Path(d) / target).write_text(src, encoding="utf-8")
+        env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", **{variable: d})
         r = subprocess.run([sys.executable, "-B", "-m", "unittest", f"test_relay.{guard}"],
                            cwd=HERE, env=env, capture_output=True, text=True)
     return r.returncode
@@ -94,10 +108,11 @@ def main() -> int:
         print("the unmodified tool fails its own tests; fix that first")
         return 1
     missed = 0
-    for guard, edits in MUTATIONS.items():
+    jobs = [(g, e, "relay.py") for g, e in MUTATIONS.items()] + [(g, e, "build.py") for g, e in BUILD_MUTATIONS.items()]
+    for guard, edits, target in jobs:
         groups = [[e] for e in edits] if SPLIT.get(guard) else [edits]
         for group in groups:
-            code = run(guard, group)
+            code = run(guard, group, target)
             what = group[0][0].strip().splitlines()[0][:60]
             if code == 1:
                 print(f"caught   {guard}: switched off '{what}'")

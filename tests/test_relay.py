@@ -8,6 +8,7 @@ its tests fail without it.
 import builtins
 import contextlib
 import io
+import json
 import os
 import shutil
 import subprocess
@@ -891,13 +892,45 @@ class TestEdges(Case):
 
 
 class PluginPackaging(unittest.TestCase):
-    def test_the_plugin_passes_the_upload_checks(self):
-        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "packaging"))
+    @staticmethod
+    def _build():
+        # BUILD_TOOL_DIR lets tests/guard_mutations.py run these tests against a broken copy.
+        sys.path.insert(0, os.environ.get("BUILD_TOOL_DIR", str(HERE.parent / "packaging")))
         try:
             import build
         finally:
             sys.path.pop(0)
-        self.assertEqual(build.problems(), [])
+        return build
+
+    def test_the_plugin_passes_the_upload_checks(self):
+        self.assertEqual(self._build().problems(HERE.parent), [])
+
+    def _problems_for(self, description, manifest):
+        build = self._build()
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "packaging").mkdir()
+            (root / "SKILL.md").write_text(
+                f"---\nname: vault-relay\ndescription: {description}\n---\n\nBody\n", encoding="utf-8")
+            (root / "packaging" / "plugin.json").write_text(json.dumps(manifest), encoding="utf-8")
+            return build.problems(root)
+
+    GOOD = {"name": "vault-relay", "version": "9.9.9", "description": "x"}
+
+    def test_refuses_angle_brackets_in_the_description(self):
+        found = self._problems_for("relay this to <code>", self.GOOD)
+        self.assertTrue(any("< or >" in p for p in found), found)
+
+    def test_refuses_a_description_over_1024_characters(self):
+        found = self._problems_for("a" * 1025, self.GOOD)
+        self.assertTrue(any("1024" in p for p in found), found)
+
+    def test_refuses_a_manifest_missing_its_version(self):
+        found = self._problems_for("fine", {"name": "vault-relay", "description": "x"})
+        self.assertTrue(any("version" in p for p in found), found)
+
+    def test_a_clean_scratch_copy_passes(self):
+        self.assertEqual(self._problems_for("fine", self.GOOD), [])
 
 
 if __name__ == "__main__":
