@@ -11,7 +11,7 @@ vault-relay 1.3 opens the relay to AI agents beyond Claude. Any agent that can w
 ### Highlights
 
 - **Works with other AIs.** A new `AGENTS.md` gives any agent (Codex, Gemini CLI, Copilot or Cursor in agent mode, and others like them) the same routine Claude follows: its sender code and relay folder, "relay for you", "relay this to", "who's in the relay" and "relay help", with every edit going through `relay.py`. Many agents read `AGENTS.md` on their own.
-- **Send with one phrase.** "Relay this to <code>" (or "relay this for <code>") turns what you just asked for into one message to that sender, with what done looks like and everything needed to finish. The recipient can be another Claude chat or another agent.
+- **Send with one phrase.** "Relay this to `<code>`" (or "relay this for `<code>`") turns what you just asked for into one message to that sender, with what done looks like and everything needed to finish. The recipient can be another Claude chat or another agent.
 - **Easier help.** "Relay help" now answers with a short bulleted list, each phrase in bold with what it does.
 
 ### Commands you can say
@@ -19,7 +19,7 @@ vault-relay 1.3 opens the relay to AI agents beyond Claude. Any agent that can w
 | Say | Or type | What happens |
 |---|---|---|
 | relay for you | `/vault-relay` | The chat reads what's waiting for it, acts on each message, closes each one with a receipt, and reports in one line. |
-| relay this to <code> | `/vault-relay to <code>` | Sends what you just asked for to that sender as one message. **New in 1.3.** |
+| relay this to `<code>` | `/vault-relay to <code>` | Sends what you just asked for to that sender as one message. **New in 1.3.** |
 | who's in the relay | `/vault-relay who` | Lists the owner, the senders and what's waiting. Changes nothing. |
 | relay help | `/vault-relay help` | Lists these phrases and what they do. |
 | set up the relay | `/vault-relay setup` | Walks you through setting up a new relay folder. |

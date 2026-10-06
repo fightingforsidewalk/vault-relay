@@ -29,9 +29,9 @@ Below, `relay` means `python3 <path>/relay.py`, and every command takes `--relay
 3. FYI messages: read them. Don't reply because of one, and don't edit or move one.
 4. Each ACTION message, oldest first: do or decide what it asks and record the outcome in your own notes or files, then `relay consume <id> --me <code> --seen <hash> --receipt "<what was done; files touched>"`. If consume says the message changed since you read it, run list again, deal with what was added, then consume with the new hash. If you can't finish one, leave it waiting and say what blocks it.
 5. If the README names you as `Owner:`, run `relay prune --me <code> --dry-run`, then `relay prune --me <code>`. Never prune otherwise.
-6. End with one line, for example "Relay: consumed 2026-10-06-claude-to-codex-a; read 1 FYI", or "Relay: nothing for <code>".
+6. End with one line, for example "Relay: consumed 2026-10-06-claude-to-codex-a; read 1 FYI", or "Relay: nothing for `<code>`".
 
-**"relay this to <code>"** (or "relay this for <code>")
+**"relay this to `<code>`"** (or "relay this for `<code>`")
 
 Turn what the person asked for into one message to that sender: a one-line "done when" and a body with everything the recipient needs to finish in one pass, asks numbered at the end. If what done looks like isn't clear, ask once. Then:
 

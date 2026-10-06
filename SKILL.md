@@ -14,7 +14,7 @@ The tool ships with this skill at `scripts/relay.py` in this skill's folder (the
 | Say | Or | What happens |
 |---|---|---|
 | relay for you | /vault-relay | This chat reads what's waiting for it, acts on each message, closes it with a receipt, and reports in one line (section 3). |
-| relay this to <code> (or relay this for <code>) | /vault-relay to <code> | Sends what the person just asked for to that sender, as one message that says what done looks like (section 5). The recipient can be another Claude chat or another AI agent working in the same folder. |
+| relay this to `<code>` (or relay this for `<code>`) | /vault-relay to `<code>` | Sends what the person just asked for to that sender, as one message that says what done looks like (section 5). The recipient can be another Claude chat or another AI agent working in the same folder. |
 | who's in the relay | /vault-relay who | Lists the folder's owner, who may send, and what's waiting, in plain words. Changes nothing (section 4). |
 | relay help | /vault-relay help | Shows this list. |
 | set up the relay | /vault-relay setup | Asks which folder, which chat owns it and who else joins, sets the folder up, then gives a ready-to-paste block for each chat and a short checklist (section 1). If the relay already exists, says so and shows who's in it. |
@@ -22,7 +22,7 @@ The tool ships with this skill at `scripts/relay.py` in this skill's folder (the
 For "relay help", reply with a bulleted list and nothing else: one bullet per row of that table, the phrase and its slash form in bold, then what it does in one plain sentence. Like this:
 
 - **relay for you** (or **/vault-relay**): reads what's waiting for this chat, acts on each message, closes it with a receipt, and reports in one line.
-- **relay this to <code>** (or **/vault-relay to <code>**): sends what you just asked for to that sender as one message.
+- **relay this to `<code>`** (or **/vault-relay to `<code>`**): sends what you just asked for to that sender as one message.
 - **who's in the relay** (or **/vault-relay who**): shows the owner, who may send, and what's waiting. Changes nothing.
 - **relay help** (or **/vault-relay help**): shows this list.
 - **set up the relay** (or **/vault-relay setup**): walks you through setting up a new relay folder.
@@ -63,7 +63,7 @@ For everything except "set up the relay": if that line is missing, don't guess. 
 - **Same machine.** If the shell that can run `<bundled>` can also see `<RELAY>`, run `<bundled>` directly with `--relay <RELAY>` for everything below. No copy in the folder is needed.
 - **Different machines** (for example the skill in the cloud and the vault on the person's computer). Copy `<RELAY>/README.md` and, if it exists, `<RELAY>/relay.py` to where `<bundled>` is, using the host's file-transfer tool, and run `python3 <bundled> install-plan --me <code> --readme <copied README> [--folder-copy <copied relay.py>]`. Do what its first word says:
   - `CURRENT`: carry on with the folder's copy.
-  - `INSTALL ...` (only ever said to the owner): copy `<bundled>` byte for byte to `<RELAY>/relay.py` with the host's file-transfer tool, never by retyping it. If that tool can refuse to write when the folder's file changed since you copied it, use that check. Then, where the folder is, run `python3 <RELAY>/relay.py --version`; it must print the text of the plan's last line after `EXPECT `, exactly. If it doesn't, stop, tell the person in one line, and run nothing else with that copy. If it does, add "installed relay.py <old> -> <new>" to your summary.
+  - `INSTALL ...` (only ever said to the owner): copy `<bundled>` byte for byte to `<RELAY>/relay.py` with the host's file-transfer tool, never by retyping it. If that tool can refuse to write when the folder's file changed since you copied it, use that check. Then, where the folder is, run `python3 <RELAY>/relay.py --version`; it must print the text of the plan's last line after `EXPECT `, exactly. If it doesn't, stop, tell the person in one line, and run nothing else with that copy. If it does, add "installed relay.py `<old>` -> `<new>`" to your summary.
   - `WAIT`: repeat its sentence to the person in your summary and carry on with the folder's copy.
   - `NEWER`: the folder's copy is newer than this skill. Carry on with it, never replace it, and mention that the skill may need updating.
   - `MISSING`: there's no copy and you aren't the owner. Tell the person in one line and stop.
@@ -84,7 +84,7 @@ Below, `<tool>` means whichever copy this step chose: `python3 <bundled>` on the
    d. If you can't finish it, leave it pending and name what blocks it in your reply to the person.
 5. Send at most one message to any one recipient, and only when the next section says to.
 6. If you are the folder's owner (`Owner:` in its README): `<tool> prune --me <code> --dry-run`, then `<tool> prune --me <code>`. It deletes consumed messages past the 14-day hold, nothing else. If it stops because deleting isn't permitted, ask the host for delete permission on the RELAY folder once if it offers that, otherwise tell the person in one line. Never prune if you aren't the owner.
-7. End the turn with nothing pending for you as ACTION, or with one line to the person naming the blocker. Summarise the pass in one line, for example "Relay: consumed 2026-10-03-planner-to-builder-a; read 1 FYI; pruned 2; installed relay.py 1.1 -> 1.2", or "Relay: nothing for <code>".
+7. End the turn with nothing pending for you as ACTION, or with one line to the person naming the blocker. Summarise the pass in one line, for example "Relay: consumed 2026-10-03-planner-to-builder-a; read 1 FYI; pruned 2; installed relay.py 1.1 -> 1.2", or "Relay: nothing for `<code>`".
 
 ## 4. "Who's in the relay" (or /vault-relay who)
 
@@ -92,7 +92,7 @@ Run `<tool> who --me <code>` and report it in plain words, for example: "Owner p
 
 ## 5. Sending a message
 
-**"Relay this to <code>"** (or "relay this for <code>", or /vault-relay to <code>) is the person asking you to send something now. Turn what they asked for into one message to `<code>`: a one-line "done when" and a body with everything the recipient needs to finish in one pass, asks numbered at the end. If what done looks like isn't clear from the conversation, ask once. Then post it as below and report the message ID in one line. Check `<code>` against the README's sender list first; if it isn't there, say so and stop. The rules below still apply.
+**"Relay this to `<code>`"** (or "relay this for `<code>`", or /vault-relay to `<code>`) is the person asking you to send something now. Turn what they asked for into one message to `<code>`: a one-line "done when" and a body with everything the recipient needs to finish in one pass, asks numbered at the end. If what done looks like isn't clear from the conversation, ask once. Then post it as below and report the message ID in one line. Check `<code>` against the README's sender list first; if it isn't there, say so and stop. The rules below still apply.
 
 Otherwise, send only when the message you're answering asks for something back, or your answer changes what the sender will do. Never send thanks, "received", "noted" or a status update; your receipt already says it.
 
