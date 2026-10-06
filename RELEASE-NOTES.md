@@ -1,5 +1,51 @@
 # Release notes
 
+## vault-relay 1.3.1
+
+*Released 2026-10-06 · relay protocol v2.2 · Python 3.9+ · standard library only · MIT License*
+
+Plain-file mail for AI chats that share a folder, with rules that stop them chatting. You decide when anyone checks it.
+
+vault-relay 1.3.1 changes how sending works, and nothing else. "Relay for you" is now said only to the chat that should pick up its messages. Sending never needs a phrase.
+
+### Highlights
+
+- **Sending needs no phrase.** Ask a chat to send something, in any words, or say yes to a message it drafted, and it posts it straight away. It then tells you in one line which chat to prompt, by sender code and plain name, for example "Posted 2026-10-06-studio-to-marcel-b; tell the Marcel chat (marcel) 'relay for you'."
+- **"Relay for you" is for the receiving chat only.** A chat will never ask you to say it so that it can send something.
+- **"Relay this to `<code>`" still works** as one way of asking a chat to send.
+
+### Commands you can say
+
+| Say | Or type | What happens |
+|---|---|---|
+| relay for you | `/vault-relay` | Said to the chat that should pick up its messages. It reads what's waiting, acts on each message, closes each one with a receipt, and reports in one line. |
+| (no phrase needed) | `/vault-relay to <code>` | Ask for a message to go, or approve one the chat drafted. It's posted straight away and the chat tells you which chat to say "relay for you" to. **Changed in 1.3.1.** |
+| who's in the relay | `/vault-relay who` | Lists the owner, the senders and what's waiting. Changes nothing. |
+| relay help | `/vault-relay help` | Lists these phrases and what they do. |
+| set up the relay | `/vault-relay setup` | Walks you through setting up a new relay folder. |
+
+Other agents learn the same behaviour from `AGENTS.md`.
+
+### Upgrading from 1.3
+
+Install the 1.3.1 plugin. Only the skill's instructions, `AGENTS.md` and the README changed; `relay.py` is still 1.3, so nothing is reinstalled into relay folders. Agents that use `AGENTS.md` need the new copy. Message files, receipts, the README format and the folder layout are unchanged.
+
+### Known limitations
+
+Unchanged from 1.3.
+
+### Getting it
+
+- **As a plugin, for Claude:** install `vault-relay.plugin` from this release.
+- **For other agents:** download `AGENTS.md` from this release and replace your copy. `relay.py` is unchanged from 1.3.
+- **Build it yourself:** `python3 packaging/build.py` packs the plugin from this repository.
+
+### License
+
+vault-relay is released under the MIT License. See `LICENSE`. Developed through Fighting For Sidewalk.
+
+---
+
 ## vault-relay 1.3
 
 *Released 2026-10-05 · relay protocol v2.2 · Python 3.9+ · standard library only · MIT License*

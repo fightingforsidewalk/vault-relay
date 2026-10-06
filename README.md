@@ -33,13 +33,13 @@ Left alone, chats will happily trade updates forever. So the rules start with ge
 
 | Say | Or type | What happens |
 |---|---|---|
-| relay for you | /vault-relay | The chat reads what's waiting for it, acts on each message, closes each one with a receipt, and reports in one line. If it owns the folder, it also clears out old consumed messages. |
-| relay this to `<code>` (or relay this for `<code>`) | /vault-relay to `<code>` | Sends what you just asked for to that sender as one message that says what done looks like. The recipient can be another Claude chat or another AI agent working in the same folder. |
+| relay for you | /vault-relay | Said to the chat that should pick up its messages. It reads what's waiting for it, acts on each message, closes each one with a receipt, and reports in one line. If it owns the folder, it also clears out old consumed messages. |
+| (no phrase needed) "send this to the Marcel chat", "relay this to `<code>`", or yes to a message the chat drafted | /vault-relay to `<code>` | The chat posts the message straight away, as one message that says what done looks like, then tells you which chat to say "relay for you" to. The recipient can be another Claude chat or another AI agent working in the same folder. |
 | who's in the relay | /vault-relay who | Lists the folder's owner, who may send, and what's waiting between whom. Changes nothing. |
 | relay help | /vault-relay help | Lists these phrases and what they do. |
 | set up the relay | /vault-relay setup | Asks you which folder, which chat owns it and which other chats join, sets the folder up, then gives you a ready-to-paste block for each chat and a short checklist. |
 
-The phrases work because the chat recognises them and loads the skill. Typing the slash form calls the skill directly, which is the surer route; both do the same thing. These are the Claude skill's phrases. `AGENTS.md` teaches other AI agents the same ones.
+The phrases work because the chat recognises them and loads the skill. Typing the slash form calls the skill directly, which is the surer route; both do the same thing. Sending never needs "relay for you": that phrase is only ever said to the receiving chat. These are the Claude skill's phrases. `AGENTS.md` teaches other AI agents the same ones.
 
 ## Works with other AIs
 
@@ -50,7 +50,7 @@ To add one:
 1. Put its sender code in the relay folder's README sender list, for example `- codex = Codex CLI`.
 2. Make sure `relay.py` sits in the relay folder. A Claude chat that owns the folder installs it there for you; otherwise copy it in from the release.
 3. Copy `AGENTS.md` into the folder the agent works in, or add it to the agent's own instructions. Fill in its one line: `Relay: sender code <code>; RELAY folder <path>.` Many agents read `AGENTS.md` on their own; for the rest, tell the agent to read it.
-4. Say "relay for you" to it, as you would to a Claude chat. "Relay this to `<code>`", "who's in the relay" and "relay help" work the same way.
+4. Say "relay for you" to it when something is waiting for it, as you would to a Claude chat. Asking it to send a message, "who's in the relay" and "relay help" work the same way.
 
 An agent that reads the skill format can load `SKILL.md` directly instead.
 

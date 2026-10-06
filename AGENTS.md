@@ -22,7 +22,7 @@ Below, `relay` means `python3 <path>/relay.py`, and every command takes `--relay
 
 ## What the person can say
 
-**"relay for you"**
+**"relay for you"** (said to the chat that should pick up its messages)
 
 1. `relay list --me <code> --full`. It shows messages waiting for you as ACTION, then as FYI, each with a `seen` hash.
 2. A NOTE about the protocol version, or a STOP line for any file, goes in your reply to the person. Don't act on a STOP file.
@@ -31,9 +31,9 @@ Below, `relay` means `python3 <path>/relay.py`, and every command takes `--relay
 5. If the README names you as `Owner:`, run `relay prune --me <code> --dry-run`, then `relay prune --me <code>`. Never prune otherwise.
 6. End with one line, for example "Relay: consumed 2026-10-06-claude-to-codex-a; read 1 FYI", or "Relay: nothing for `<code>`".
 
-**"relay this to `<code>`"** (or "relay this for `<code>`")
+**Sending a message** (no special phrase needed)
 
-Turn what the person asked for into one message to that sender: a one-line "done when" and a body with everything the recipient needs to finish in one pass, asks numbered at the end. If what done looks like isn't clear, ask once. Then:
+When the person asks for a message to go to another chat or agent, in any words ("send this to the Marcel chat", "relay this to `<code>`"), or says yes to a message you drafted, post it straight away. Don't wait for, or ask for, any further phrase. Turn what they asked for into one message: a one-line "done when" and a body with everything the recipient needs to finish in one pass, asks numbered at the end. If what done looks like isn't clear, ask once before posting. Then:
 
 ```
 relay post --relay <path> --from <your code> --to <code> --done-when "<one line>" [--re <id you are answering>] --body - <<'BODY'
@@ -41,11 +41,13 @@ relay post --relay <path> --from <your code> --to <code> --done-when "<one line>
 BODY
 ```
 
-If it says you already have a message waiting for that recipient, run the same command with `--add` to add to it. If it refuses a third message on one thread, don't send it: put the question to the person as a decision with options. Report the message ID in one line.
+If it says you already have a message waiting for that recipient, run the same command with `--add` to add to it. If it refuses a third message on one thread, don't send it: put the question to the person as a decision with options.
+
+Once it's posted, tell the person in one line which chat to prompt, by sender code and plain name from the README's sender list, for example: "Posted 2026-10-06-studio-to-marcel-b; tell the Marcel chat (marcel) 'relay for you'." "Relay for you" is only for the receiving side: never ask the person to say it to you so that you can send something.
 
 **"who's in the relay"**: `relay who --me <code>`, reported in plain words. Changes nothing.
 
-**"relay help"**: reply with a bulleted list and nothing else, one bullet per phrase above, the phrase in bold, then what it does in one plain sentence. For example: "- **relay for you**: reads what's waiting for you, acts on each message, closes it with a receipt, and reports in one line."
+**"relay help"**: reply with a bulleted list and nothing else, one bullet per item above, the phrase in bold, then what it does in one plain sentence. For sending, say that no phrase is needed: ask for a message to go, or approve one you drafted, and it's posted with a note of which chat to prompt. For example: "- **relay for you**: reads what's waiting for you, acts on each message, closes it with a receipt, and reports in one line."
 
 ## Rules worth repeating
 

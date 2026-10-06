@@ -1,6 +1,6 @@
 ---
 name: vault-relay
-description: Runs the vault relay when the person says "relay for you", "relay this to <code>", "who's in the relay", "relay help" or "set up the relay", or uses /vault-relay (alone, or with who, help, setup or to <code>); sends messages to other chats or AI agents through a RELAY folder. Uses the bundled relay tool for every edit.
+description: Runs the vault relay when the person says "relay for you", "relay this to <code>", "who's in the relay", "relay help" or "set up the relay", or uses /vault-relay (alone, or with who, help, setup or to <code>); also whenever the person asks for a message to go to another chat or AI agent, or approves one drafted for that, which is posted straight away through a RELAY folder with no special phrase. Uses the bundled relay tool for every edit.
 ---
 
 # Vault relay
@@ -14,15 +14,15 @@ The tool ships with this skill at `scripts/relay.py` in this skill's folder (the
 | Say | Or | What happens |
 |---|---|---|
 | relay for you | /vault-relay | This chat reads what's waiting for it, acts on each message, closes it with a receipt, and reports in one line (section 3). |
-| relay this to `<code>` (or relay this for `<code>`) | /vault-relay to `<code>` | Sends what the person just asked for to that sender, as one message that says what done looks like (section 5). The recipient can be another Claude chat or another AI agent working in the same folder. |
+| (no phrase needed) "send this to the Marcel chat", "relay this to `<code>`", or yes to a message you drafted | /vault-relay to `<code>` | Posts the message straight away, then tells the person which chat to prompt with "relay for you" (section 5). The recipient can be another Claude chat or another AI agent working in the same folder. |
 | who's in the relay | /vault-relay who | Lists the folder's owner, who may send, and what's waiting, in plain words. Changes nothing (section 4). |
 | relay help | /vault-relay help | Shows this list. |
 | set up the relay | /vault-relay setup | Asks which folder, which chat owns it and who else joins, sets the folder up, then gives a ready-to-paste block for each chat and a short checklist (section 1). If the relay already exists, says so and shows who's in it. |
 
 For "relay help", reply with a bulleted list and nothing else: one bullet per row of that table, the phrase and its slash form in bold, then what it does in one plain sentence. Like this:
 
-- **relay for you** (or **/vault-relay**): reads what's waiting for this chat, acts on each message, closes it with a receipt, and reports in one line.
-- **relay this to `<code>`** (or **/vault-relay to `<code>`**): sends what you just asked for to that sender as one message.
+- **relay for you** (or **/vault-relay**): say it to the chat that should pick up its messages. It reads what's waiting for it, acts on each message, closes it with a receipt, and reports in one line.
+- **sending** needs no special phrase: ask me to send something to another chat (or say yes to a message I drafted) and I post it right away, then tell you which chat to say **relay for you** to. **/vault-relay to `<code>`** does the same.
 - **who's in the relay** (or **/vault-relay who**): shows the owner, who may send, and what's waiting. Changes nothing.
 - **relay help** (or **/vault-relay help**): shows this list.
 - **set up the relay** (or **/vault-relay setup**): walks you through setting up a new relay folder.
@@ -84,7 +84,9 @@ Below, `<tool>` means whichever copy this step chose: `python3 <bundled>` on the
    d. If you can't finish it, leave it pending and name what blocks it in your reply to the person.
 5. Send at most one message to any one recipient, and only when the next section says to.
 6. If you are the folder's owner (`Owner:` in its README): `<tool> prune --me <code> --dry-run`, then `<tool> prune --me <code>`. It deletes consumed messages past the 14-day hold, nothing else. If it stops because deleting isn't permitted, ask the host for delete permission on the RELAY folder once if it offers that, otherwise tell the person in one line. Never prune if you aren't the owner.
-7. End the turn with nothing pending for you as ACTION, or with one line to the person naming the blocker. Summarise the pass in one line, for example "Relay: consumed 2026-10-03-planner-to-builder-a; read 1 FYI; pruned 2; installed relay.py 1.1 -> 1.2", or "Relay: nothing for `<code>`".
+7. End the turn with nothing pending for you as ACTION, or with one line to the person naming the blocker. Summarise the pass in one line, for example "Relay: consumed 2026-10-03-planner-to-builder-a; read 1 FYI; pruned 2; installed relay.py 1.1 -> 1.2", or "Relay: nothing for `<code>`". If the pass posted a reply, add the line from section 5 saying which chat to prompt.
+
+"Relay for you" is only ever for the receiving side. Never ask the person to say it to you so that you can send something.
 
 ## 4. "Who's in the relay" (or /vault-relay who)
 
@@ -92,7 +94,11 @@ Run `<tool> who --me <code>` and report it in plain words, for example: "Owner p
 
 ## 5. Sending a message
 
-**"Relay this to `<code>`"** (or "relay this for `<code>`", or /vault-relay to `<code>`) is the person asking you to send something now. Turn what they asked for into one message to `<code>`: a one-line "done when" and a body with everything the recipient needs to finish in one pass, asks numbered at the end. If what done looks like isn't clear from the conversation, ask once. Then post it as below and report the message ID in one line. Check `<code>` against the README's sender list first; if it isn't there, say so and stop. The rules below still apply.
+**Sending needs no special phrase.** When the person asks for a message to go to another chat, in any words ("send this to the Marcel chat", "relay this to `<code>`", /vault-relay to `<code>`), or says yes to a message you drafted for them, post it straight away with the tool. Don't wait for, or ask for, any further phrase. Turn what they asked for into one message: a one-line "done when" and a body with everything the recipient needs to finish in one pass, asks numbered at the end. If what done looks like isn't clear from the conversation, ask once before posting. Check the recipient's code against the README's sender list first; if it isn't there, say so and stop.
+
+Once it's posted, tell the person in one line which chat to prompt, by sender code and plain name (the description in the README's sender list), for example: "Posted 2026-10-06-studio-to-marcel-b; tell the Marcel chat (marcel) 'relay for you'."
+
+The rules below still apply.
 
 Otherwise, send only when the message you're answering asks for something back, or your answer changes what the sender will do. Never send thanks, "received", "noted" or a status update; your receipt already says it.
 
