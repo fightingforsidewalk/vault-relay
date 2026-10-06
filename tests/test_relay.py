@@ -889,5 +889,16 @@ class TestEdges(Case):
         self.assertEqual(relay.letters_to_n("aa"), 27)
 
 
+
+class PluginPackaging(unittest.TestCase):
+    def test_the_plugin_passes_the_upload_checks(self):
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "packaging"))
+        try:
+            import build
+        finally:
+            sys.path.pop(0)
+        self.assertEqual(build.problems(), [])
+
+
 if __name__ == "__main__":
     unittest.main()

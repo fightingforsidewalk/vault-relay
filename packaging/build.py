@@ -6,6 +6,7 @@ Writes OUT_DIR/vault-relay.plugin (default: the current folder): a zip holding t
 plugin manifest, the skill and the tool at the path the skill expects
 (skills/vault-relay/scripts/relay.py). Standard library only.
 """
+import json
 import sys
 import zipfile
 from pathlib import Path
@@ -20,7 +21,34 @@ FILES = {
 }
 
 
+def problems() -> list:
+    """What claude.ai's plugin upload would refuse, checked before packing."""
+    found = []
+    text = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    parts = text.split("---", 2)
+    head = parts[1] if text.startswith("---") and len(parts) == 3 else ""
+    desc = [l for l in head.splitlines() if l.startswith("description:")]
+    if not desc:
+        found.append("SKILL.md has no description in its frontmatter")
+    else:
+        d = desc[0][len("description:"):].strip()
+        if "<" in d or ">" in d:
+            found.append("SKILL.md description contains < or >, which the upload reads as an XML tag")
+        if len(d) > 1024:
+            found.append(f"SKILL.md description is {len(d)} characters; the limit is 1024")
+    manifest = json.loads((ROOT / "packaging" / "plugin.json").read_text(encoding="utf-8"))
+    for key in ("name", "version", "description"):
+        if not manifest.get(key):
+            found.append(f"plugin.json has no {key}")
+    return found
+
+
 def main() -> int:
+    bad = problems()
+    if bad:
+        for p in bad:
+            print(f"refusing to build: {p}", file=sys.stderr)
+        return 1
     folder = Path(sys.argv[1] if len(sys.argv) > 1 else ".")
     if not folder.is_dir():
         print(f"{folder} isn't a folder", file=sys.stderr)

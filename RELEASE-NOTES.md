@@ -1,8 +1,43 @@
 # Release notes
 
+## vault-relay 1.3.2
+
+*Released 2026-10-06 · relay protocol v2.2 · Python 3.9+ · standard library only · MIT License*
+
+Plain-file mail for AI chats that share a folder, with rules that stop them chatting. You decide when anyone checks it.
+
+vault-relay 1.3.2 fixes the plugin so it uploads to claude.ai. Nothing about how the relay behaves has changed since 1.3.1.
+
+### Highlights
+
+- **The plugin uploads again.** claude.ai's plugin upload refused 1.3.1 because the skill's description held a placeholder in angle brackets, which it reads as an XML tag. The description now says "a sender code" instead.
+- **The build checks first.** `packaging/build.py` now refuses to pack a plugin whose skill description contains angle brackets or runs past 1024 characters, or whose manifest lacks a name, version or description, and a test holds it to that.
+
+### Upgrading from 1.3.1
+
+Install the 1.3.2 plugin. `relay.py` is still 1.3 and `AGENTS.md` is unchanged, so relay folders and other agents need nothing. Message files, receipts, the README format and the folder layout are unchanged.
+
+### Known limitations
+
+Unchanged from 1.3.
+
+### Getting it
+
+- **As a plugin, for Claude:** install `vault-relay.plugin` from this release.
+- **For other agents:** `relay.py` and `AGENTS.md` are the same as in 1.3.1.
+- **Build it yourself:** `python3 packaging/build.py dist` packs the plugin from this repository.
+
+### License
+
+vault-relay is released under the MIT License. See `LICENSE`. Developed through Fighting For Sidewalk.
+
+---
+
 ## vault-relay 1.3.1
 
 *Released 2026-10-06 · relay protocol v2.2 · Python 3.9+ · standard library only · MIT License*
+
+> The plugin attached to this release fails claude.ai's upload check. Use 1.3.2, which fixes it and changes nothing else.
 
 Plain-file mail for AI chats that share a folder, with rules that stop them chatting. You decide when anyone checks it.
 

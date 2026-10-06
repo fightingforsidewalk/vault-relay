@@ -1,6 +1,6 @@
 ---
 name: vault-relay
-description: Runs the vault relay when the person says "relay for you", "relay this to <code>", "who's in the relay", "relay help" or "set up the relay", or uses /vault-relay (alone, or with who, help, setup or to <code>); also whenever the person asks for a message to go to another chat or AI agent, or approves one drafted for that, which is posted straight away through a RELAY folder with no special phrase. Uses the bundled relay tool for every edit.
+description: Runs the vault relay when the person says "relay for you", "relay this to" a sender code, "who's in the relay", "relay help" or "set up the relay", or uses /vault-relay (alone, or with who, help, setup, or to followed by a sender code); also whenever the person asks for a message to go to another chat or AI agent, or approves one drafted for that, which is posted straight away through a RELAY folder with no special phrase. Uses the bundled relay tool for every edit.
 ---
 
 # Vault relay
