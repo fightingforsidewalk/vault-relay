@@ -1,5 +1,9 @@
 # Release notes
 
+## Next release
+
+License holder name changed to Fighting For Sidewalk.
+
 ## vault-relay 1.3.2
 
 *Released 2026-10-06 · relay protocol v2.2 · Python 3.9+ · standard library only · MIT License*
